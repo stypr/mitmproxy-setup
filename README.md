@@ -1,52 +1,66 @@
-## mitmproxy-tools
+# mitmproxy-setup
 
-List of generic mitmproxy scripts I use while working on various researches, pentests and bug bounties.
+Here's the mitmproxy setup I use when working on various researches, pentests, and bug bounties.
 
-Previously
+Contributions are welcome! Feel free to share any interesting addons or views you have.
 
-* I wrote a blog post about my [mitmproxy + openvpn](https://blog.flatt.tech/entry/mitmproxy) setup at my former workpace.
-* then I wrote another [mitmproxy + openvpn](https://gist.github.com/stypr/abe9ef83556759847c063ae9389fa0ae) setup to show the current setup
+## Background
 
-What has been changed this time
+### Previous Work
 
-* Directory structures have been changed for convenient addons
-  - `views/*` can be used to auto decrypt some of request/response data for better visuals
-  - `addons/*` can be used to work like plugins to do actions upon send/receive.
+Long ago, I wrote a blog post of my [mitmproxy + OpenVPN setup](https://blog.flatt.tech/entry/mitmproxy) at my former workplace.
+Then I later published another [mitmproxy + OpenVPN setup](https://gist.github.com/stypr/abe9ef83556759847c063ae9389fa0ae) to show the current setup both in English and Korean.
 
-* Replacing openvpn setups to wireguard setups
-  - When upstream SOCK5 proxy only supports TCP, UDP packets have to be passed through somehow.
-    1. Unfortunately, transparent proxy will not pass UDP packets, while the wireguard mode does support DNS and UDP packet mitm.
-  - Setups are much simpler than typical openvpn setup.
-  - Reference: https://mitmproxy.org/posts/wireguard-mode/
-  - There are still some limitations like lack of handling for HTTP2 and HTTP3, but we can still use the old HTTPS.
+### What's New?
 
-Feel free to contribute if you have any interesting addons/views to share.
+This time introduces a few more changes:
 
-### Installations
+### Directory Structure Updates  
 
-#### Summary
+- **`views/*`**: Automates decryption of specific request/response data to enhance data visualization.
+- **`addons/*`**: Acts as plugins to perform actions on send/receive HTTP data
 
-Most of them are same as [the gist version](https://gist.github.com/stypr/abe9ef83556759847c063ae9389fa0ae), except that you don't have to install OpenVPN anymore.
+#### Transition to WireGuard Setup  
 
-1. Install `wireguard` on your system (`apt install -y wireguard`)
+- Completely Replaced OpenVPN with WireGuard for improved functionality. (Ref. [WireGuard Mode](https://mitmproxy.org/posts/wireguard-mode/))
+  - WireGuard mode supports DNS and UDP packet manipulation, unlike the transparent proxy, which cannot pass UDP packets when the upstream SOCKS5 proxy only supports TCP.
+  - WireGuard setups are significantly simpler compared to traditional OpenVPN configurations.
+  - Some limitations remain, such as partial handling of HTTP2/HTTP3 traffics, but there seems not much problem of just using old HTTPS.
 
-2. `bind9` is not needed anymore. Also, [mitmproxy now has its own way to handle DNS manipulations now](https://github.com/Kriechi/mitmproxy/blob/dns-addon/docs/src/content/overview-features.md#dns-manipulation).
 
-2. Install [Caddy](https://caddyserver.com/docs/install)
+## Installations
 
-3. Add passwords on [caddy/Caddyfile](caddy/Caddyfile) using `caddy hash-password`, move files to `/etc/caddy`
+### Overview
 
-4. Install mitmproxy to latest
-```sh
-apt install -y python3-pyasn1 python3-flask python3-dev python3-urwid python3-pip libxml2-dev libxslt-dev libffi-dev
-pip3 install -U mitmproxy --break-system-packages
-mitmproxy --version
-```
+The installation process is similar to the [old gist](https://gist.github.com/stypr/abe9ef83556759847c063ae9389fa0ae), with a few key differences:
+- OpenVPN is no longer required.
+- The `bind9` dependency is removed, as [mitmproxy now handles DNS manipulations](https://github.com/Kriechi/mitmproxy/blob/dns-addon/docs/src/content/overview-features.md#dns-manipulation).
 
-5. The script proxies through upstream [WARP](https://one.one.one.one/) by default.
-   You might want to install or make appropriate changes to the script.
+1. Install WireGuard
+    ```sh
+    apt install -y wireguard
+    ```
 
-6. Once everything is done, `screen ./run.sh`
+2. Install Caddy
+    Follow instructions [here](https://caddyserver.com/docs/install).
+    - Add passwords to the [Caddyfile](caddy/Caddyfile) using `caddy hash-password`.
+    - Move [Caddyfile](caddy/Caddyfile) to `/etc/caddy`.
+
+3. Install mitmproxy
+    ```sh
+    apt install -y python3-pyasn1 python3-flask python3-dev python3-urwid python3-pip libxml2-dev libxslt-dev libffi-dev  
+    pip3 install -U mitmproxy --break-system-packages  
+    mitmproxy --version  
+    ```
+
+4. Set up WARP proxy (default)
+   The script proxies through [WARP](https://one.one.one.one/) by default. You may need to customize the script for your needs.
+
+5. Run the Setup:
+   Once everything is ready, use:
+   ```sh
+   screen ./run.sh
+   ```
 
 #### Installing WARP on Linux
 
