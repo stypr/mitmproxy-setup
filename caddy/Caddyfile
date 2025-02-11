@@ -1,0 +1,47 @@
+example.tld {
+	# tls internal
+
+    log {
+        format json {
+            time_format rfc3339
+        }
+        output file /var/log/caddy/default.log {
+            roll_size 1gb
+            roll_keep 2
+            roll_keep_for 2160h
+        }
+    }
+
+    header /* {
+        -Server
+        -X-frame-options
+        -X-powered-by
+        ?Access-Control-Allow-Methods "POST, GET, OPTIONS"
+        ?Access-Control-Allow-Origin "*"
+        Cache-Control: no-cache, no-store, must-revalidate
+        defer
+    }
+
+    handle_errors {
+        header /* {
+            -Server
+            -X-frame-options
+            -X-powered-by
+            ?Access-Control-Allow-Methods "POST, GET, OPTIONS"
+            ?Access-Control-Allow-Origin "*"
+            Cache-Control: no-cache, no-store, must-revalidate
+            defer
+        }
+    }
+
+    handle_path /* {
+        # use `caddy hash-password` to generate credentials
+        basicauth {
+            admin $2a$......
+        }
+        reverse_proxy * http://localhost:8000 {
+            header_up Host localhost:8000
+            header_up Origin http://localhost:8000
+        }
+    }
+}
