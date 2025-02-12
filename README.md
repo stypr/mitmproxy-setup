@@ -75,7 +75,7 @@ sudo apt update && sudo apt install -y cloudflare-warp
 2. Register WARP, set proxy with appropriate ports, start proxy.
 
 ```sh
-warp-cli register
+warp-cli registration new
 warp-cli proxy port 40000
 warp-cli mode proxy
 warp-cli connect
