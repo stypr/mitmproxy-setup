@@ -15,7 +15,7 @@ Then I later published another [mitmproxy + OpenVPN setup](https://gist.github.c
 
 This time introduces a few more changes:
 
-### Directory Structure Updates  
+#### Directory Structure Updates  
 
 - **`views/*`**: Automates decryption of specific request/response data to enhance data visualization.
 - **`addons/*`**: Acts as plugins to perform actions on send/receive HTTP data
