@@ -9,7 +9,7 @@ import logging
 import importlib
 
 from mitmproxy import contentviews
-from views.pjsekai import ViewProjectSekai
+from views.sekai import ViewSekai
 from addons.upstream_proxy import UpstreamProxy
 from addons.web_console import WebConsole
 from addons.no_cache import NoCache
