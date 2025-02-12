@@ -49,7 +49,7 @@ addons = [
 
 # All Views go here
 views = [
-    ViewProjectSekai(),
+    ViewSekai(),
 ]
 
 ####
