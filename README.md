@@ -49,7 +49,7 @@ The installation process is similar to the [old gist](https://gist.github.com/st
 3. Install mitmproxy
     ```sh
     apt install -y python3-pyasn1 python3-flask python3-dev python3-urwid python3-pip libxml2-dev libxslt-dev libffi-dev  
-    pip3 install -U mitmproxy --break-system-packages  
+    pip3 install -U mitmproxy pycryptodome requests --break-system-packages  
     mitmproxy --version  
     ```
 
