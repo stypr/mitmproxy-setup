@@ -14,7 +14,9 @@ mitmweb \
   --no-web-open-browser \
   --set confdir=$PWD/config \
   --mode wireguard:$PWD/config/wireguard_server1.conf@303 \
-  --script main.py
+  --script main.py \
+  -r config/flow \
+  -w config/flow
 
 # For mulitple clients, simple add more configs.
 # Wireguard client configs are available in the web frontend.
