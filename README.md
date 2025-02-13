@@ -2,14 +2,24 @@
 
 Here's the mitmproxy setup I use when working on various researches, pentests, and bug bounties.
 
+Personally I have not been using Burp for many years unless I really had a reason to. Reasons include:
+
+1. Free of cost.
+2. Convenient to debug when performing security researches or playing CTFs.
+3. Convenient to add plugins or features if you can write a code in python.
+4. Viewing and editing via web interface. Simply install at your home, VPS, or work. extremely lightweight.
+5. [Chaining proxies](https://docs.mitmproxy.org/stable/concepts-modes/#upstream-proxy) is very convenient.
+
 Contributions are welcome! Feel free to share any interesting addons or views you have.
+
+You may also want to look the official [Addons Examples](https://github.com/mitmproxy/mitmproxy/tree/main/examples/addons) for boilerplate codes.
 
 ## Background
 
 ### Previous Work
 
 Long ago, I wrote a blog post of my [mitmproxy + OpenVPN setup](https://blog.flatt.tech/entry/mitmproxy) at my former workplace.
-Then I later published another [mitmproxy + OpenVPN setup](https://gist.github.com/stypr/abe9ef83556759847c063ae9389fa0ae) to show the current setup both in English and Korean.
+Later, I published another [mitmproxy + OpenVPN setup](https://gist.github.com/stypr/abe9ef83556759847c063ae9389fa0ae) to share my existing setup both in English and Korean.
 
 ### What's New?
 
@@ -17,13 +27,15 @@ This time introduces a few more changes:
 
 #### Directory Structure Updates  
 
-- **`views/*`**: Automates decryption of specific request/response data to enhance data visualization.
-- **`addons/*`**: Acts as plugins to perform actions on send/receive HTTP data
+Directories are divided for convenient coding, hot-reloading on subdirectories are included
+
+- **`views`**: Automates manipulation of specific request/response data to enhance data visualization.
+- **`addons*`**: Acts as plugins to perform actions on send/receive HTTP data
 
 #### Transition to WireGuard Setup  
 
 - Completely Replaced OpenVPN with WireGuard for improved functionality. (Ref. [WireGuard Mode](https://mitmproxy.org/posts/wireguard-mode/))
-  - WireGuard mode supports DNS and UDP packet manipulation, unlike the transparent proxy, which cannot pass UDP packets when the upstream SOCKS5 proxy only supports TCP.
+  - WireGuard mode supports DNS and UDP packet inspection / manipulation unlike the transparent proxy. 
   - WireGuard setups are significantly simpler compared to traditional OpenVPN configurations.
   - Some limitations remain, such as partial handling of HTTP2/HTTP3 traffics, but there seems not much problem of just using old HTTPS.
 
