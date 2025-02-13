@@ -46,10 +46,10 @@ The installation process is similar to the [old gist](https://gist.github.com/st
     - Add passwords to the [Caddyfile](caddy/Caddyfile) using `caddy hash-password`.
     - Move [Caddyfile](caddy/Caddyfile) to `/etc/caddy`.
 
-3. Install mitmproxy
+3. Install mitmproxy and check versions
     ```sh
     apt install -y python3-pyasn1 python3-flask python3-dev python3-urwid python3-pip libxml2-dev libxslt-dev libffi-dev  
-    pip3 install -U mitmproxy pycryptodome requests --break-system-packages  
+    pip3 install -r requirements.txt --break-system-packages # or enable venv
     mitmproxy --version  
     ```
 
@@ -64,7 +64,7 @@ The installation process is similar to the [old gist](https://gist.github.com/st
 
 #### Installing WARP on Linux
 
-1. Install WARP CLI.
+1. Install WARP CLI
 
 ```sh
 curl https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
