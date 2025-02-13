@@ -4,11 +4,14 @@
 Main script for mitmproxy
 """
 
+import os
 import pkgutil
-import logging
+import asyncio
 import importlib
 
-from mitmproxy import contentviews
+from mitmproxy import ctx, contentviews
+from reloader import watch_changes, reload_modules
+
 from views.sekai import ViewSekai
 from addons.upstream_proxy import UpstreamProxy
 from addons.web_console import WebConsole
@@ -16,23 +19,11 @@ from addons.no_cache import NoCache
 from addons.debug import Debug
 
 # Hot Reloading
-# If you want to reload everything, make changes to `main.py` or run `touch main.py`.
-def reload_modules(module_dirs):
-    """
-    Reload all modules in subdirectories
-    """
-    for module_dir in module_dirs:
-        try:
-            package = importlib.import_module(module_dir)
-            for _, module_name, is_pkg in pkgutil.walk_packages(
-                package.__path__,
-                module_dir + "."
-            ):
-                if not is_pkg:
-                    logging.info("Reloading module: %s", module_name)
-                    importlib.reload(importlib.import_module(module_name))
-        except ModuleNotFoundError as e:
-            logging.error("Error: %s", e)
+for task in asyncio.all_tasks():
+    if task.get_name() == 'watch_changes':
+        ctx.log.info("Canceling previous autoreload task")
+        task.cancel()
+asyncio.create_task(watch_changes(), name="watch_changes")
 
 reload_modules([
     "addons",
@@ -52,9 +43,7 @@ views = [
     ViewSekai(),
 ]
 
-####
 # This code is required for adding/removing views
-
 def load(loader):
     for view in views:
         contentviews.add(view)

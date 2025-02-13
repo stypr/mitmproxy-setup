@@ -16,6 +16,6 @@ mitmweb \
   --mode wireguard:$PWD/config/wireguard_server1.conf@303 \
   --script main.py
 
-# For mulitple clients, add more configs.
-# Client configurations are available in the web frontend
+# For mulitple clients, simple add more configs.
+# Wireguard client configs are available in the web frontend.
 #   --mode wireguard:$PWD/config/wireguard_server2.conf@304
