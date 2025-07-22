@@ -7,16 +7,13 @@ Adds AES auto-decrypt view in the mitmweb
 """
 
 from typing import Optional
-from urllib.parse import urlparse
+import json
 import msgpack
 from Crypto.Cipher import AES
-from mitmproxy import contentviews
-from mitmproxy import flow
-from mitmproxy import http
-# from mitmproxy import ctx
+from mitmproxy.contentviews import Contentview
 
 class SekaiCore:
-    # To use this you need a valid key and IV.
+    # To use this class, you need a valid key and IV.
     aes_key = b""
     aes_iv = b""
 
@@ -48,39 +45,31 @@ class SekaiCore:
                 return {}
 
 
-class ViewSekai(contentviews.View):
-    name = "sekai"
-
-    def __call__(
-        self,
-        data: bytes,
-        *,
-        content_type: Optional[str] = None,
-        flow: Optional[flow.Flow] = None,
-        http_message: Optional[http.Message] = None,
-        **unknown_metadata,
-    ) -> contentviews.TViewResult:
-        """ Decrypts data upon response. """
-        try:
-            plaintext: Optional[dict] = SekaiCore.decrypt_data(data)
-            return "sekai", contentviews.json.format_json(plaintext)
-        except Exception as e:
-            return "sekai", contentviews.format_text(e)
+class ViewProjectSekai(Contentview):
+    name = "pjsekai"
 
     def render_priority(
         self,
         data: bytes,
-        *,
-        content_type: Optional[str] = None,
-        flow: Optional[flow.Flow] = None,
-        http_message: Optional[http.Message] = None,
-        **unknown_metadata,
+        metadata
     ) -> float:
         """ prioritize using this when priority is set """
         try:
-            if not data:
+            if not data or not metadata:
                 return 0
-            _ = SekaiCore.decrypt_data(data)
-            return 1
+
+            decrypt_result = SekaiCore.decrypt_data(data)
+            return 1 if decrypt_result else 0
         except Exception as e:
             return 0
+
+    def prettify(
+        self,
+        data: bytes,
+        _
+    ) -> str:
+        try:
+            plaintext: Optional[dict] = SekaiCore.decrypt_data(data)
+            return json.dumps(plaintext, indent=4, ensure_ascii=False)
+        except Exception as e:
+            return e
