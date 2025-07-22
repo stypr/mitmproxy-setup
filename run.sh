@@ -3,6 +3,7 @@
 warp-cli disconnect
 warp-cli connect
 mitmweb \
+  --set web_password='changeme' \
   --ignore-hosts dns.google.com \
   --web-port 8000 \
   --web-host localhost \
@@ -15,8 +16,7 @@ mitmweb \
   --set confdir=$PWD/config \
   --mode wireguard:$PWD/config/wireguard_server1.conf@303 \
   --script main.py \
-  -r config/flow \
-  -w config/flow
+  -r config/flow
 
 # For mulitple clients, simple add more configs.
 # Wireguard client configs are available in the web frontend.
