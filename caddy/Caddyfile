@@ -36,11 +36,15 @@ example.tld {
 
     handle_path /* {
         # use `caddy hash-password` to generate credentials
-        basicauth {
-            admin $2a$......
-        }
+        # or use the new authentication feature shipped on mitmproxy 12.x and higher.
+        # In case you want to use the built-in authentication feature, please change run.sh accordingly
+        # and remove `header_up` values from Caddyfile.
+        # basicauth {
+        #     admin $2a$......
+        # }
         reverse_proxy * http://localhost:8000 {
             header_up Host localhost:8000
+            header_up Authorization "Bearer changeme"
             header_up Origin http://localhost:8000
         }
     }
