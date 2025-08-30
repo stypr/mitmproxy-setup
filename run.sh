@@ -10,7 +10,7 @@ mitmweb \
   --ssl-insecure \
   --set stream_large_bodies=1024000 \
   --set connection_strategy=lazy \
-  --set http2=false \
+  --set http2=true \
   --set http3=false \
   --no-web-open-browser \
   --set confdir=$PWD/config \
