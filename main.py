@@ -4,11 +4,9 @@
 Main script for mitmproxy
 """
 
-import os
 import sys
-import pkgutil
 import asyncio
-import importlib
+from pathlib import Path
 
 from mitmproxy import ctx, contentviews
 from reloader import watch_changes, reload_modules
@@ -19,15 +17,19 @@ from addons.web_console import WebConsole
 from addons.no_cache import NoCache
 from addons.debug import Debug
 
-# Redirect stdout
+# Redirect all stdout to stderr
 sys.stdout = sys.stderr
 
-# Hot Reloading
+# HotReloading
 for task in asyncio.all_tasks():
     if task.get_name() == 'watch_changes':
         ctx.log.info("Canceling previous autoreload task")
         task.cancel()
-asyncio.create_task(watch_changes(), name="watch_changes")
+
+asyncio.create_task(
+    watch_changes(trigger_file=Path(__file__)),
+    name="watch_changes"
+)
 
 reload_modules([
     "addons",
@@ -47,7 +49,10 @@ views = [
     ViewSekai(),
 ]
 
+####
 # This code is required for adding/removing views
+####
+
 def load(loader):
     for view in views:
         contentviews.add(view)
