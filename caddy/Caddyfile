@@ -36,7 +36,9 @@ example.tld {
 
     handle_path /* {
         # use `caddy hash-password` to generate credentials
-        # or use the new authentication feature shipped on 12.x
+        # or use the new authentication feature shipped on mitmproxy 12.x and higher.
+        # In case you want to use the built-in authentication feature, please change run.sh accordingly
+        # and remove `header_up` values from Caddyfile.
         # basicauth {
         #     admin $2a$......
         # }
