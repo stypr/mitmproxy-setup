@@ -1,35 +1,34 @@
 import os
 import pkgutil
-import asyncio
 import importlib
 
 from pathlib import Path
+from watchfiles import awatch, PythonFilter
 from mitmproxy import ctx
-from watchfiles import awatch, Change, PythonFilter
 
 # By default, Hot reloading is only done for Python scripts only
-# Use https://watchfiles.helpmanual.io/api/filters/ as a reference
+# Read https://watchfiles.helpmanual.io/api/filters/ for more information
 
 class ReloadFilter(PythonFilter):
     ignore_paths = [os.path.realpath(__file__)]
 
-async def watch_changes():
+async def watch_changes(trigger_file: Path):
     """
     Watch for all changes in the subdirectory
     the main script needs to be filtered as mitmproxy autoreloads main script changes
     """
     ctx.log.info("Autoreload task started")
     async for changes in awatch(
-        os.path.realpath(__file__),
+        os.path.dirname(os.path.realpath(__file__)),
         watch_filter=ReloadFilter()
     ):
         try:
             ctx.log.info(f"Changes detected: {changes}")
-            Path(__file__).touch()
+            trigger_file.touch()
         except Exception as e:
             print("Exception in autoreload:", e)
 
-def reload_modules(module_dirs):
+def reload_modules(module_dirs: list):
     """
     Reload all modules in subdirectories
     """
@@ -44,5 +43,4 @@ def reload_modules(module_dirs):
                     ctx.log.info(f"Reloading module: {module_name}")
                     importlib.reload(importlib.import_module(module_name))
         except ModuleNotFoundError as e:
-            ctx.log.error("Reloading Module Error: {%s}")
-
+            ctx.log.error(f"Reloading Module Error: {e}")
