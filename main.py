@@ -5,6 +5,7 @@ Main script for mitmproxy
 """
 
 import os
+import sys
 import pkgutil
 import asyncio
 import importlib
@@ -17,6 +18,9 @@ from addons.upstream_proxy import UpstreamProxy
 from addons.web_console import WebConsole
 from addons.no_cache import NoCache
 from addons.debug import Debug
+
+# Redirect stdout
+sys.stdout = sys.stderr
 
 # Hot Reloading
 for task in asyncio.all_tasks():
