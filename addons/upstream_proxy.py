@@ -21,13 +21,13 @@ class UpstreamProxy:
         ("1.1.1.1", 53)
     ]
 
-    def get_dns_address(self) -> tuple[str, int]:
+    def get_resolver_address(self) -> tuple[str, int]:
         """
         Load balancing based on random.choice
         """
         return random.choice(self.resolver_servers) if self.resolver_servers else None
 
-    def get_resolver_address(self) -> tuple[str, int]:
+    def get_proxy_address(self) -> tuple[str, int]:
         """
         Load balancing based on random.choice
         """
@@ -80,7 +80,6 @@ class UpstreamProxy:
         resolver: tuple[str, int],
         request: dns.DNSMessage,
     ) -> dns.DNSMessage:
-
 
         reader, writer = await asyncio.open_connection(
             proxy[0],
